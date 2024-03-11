@@ -12,18 +12,17 @@ Create simple web application and stress test it.
 
    - POST / - creates data entry in the database and returns HTML which displays it
 
-2. **Data Model**:
+2. **Data Model Example**:
 
    ```json
-   // Example:
    {
-      username: string,
-      email: string,
-      age: number,
-      avatar: string,
-      password: string,
-      birthdate: date,
-      registeredAt: date,
+      "username": "string",
+      "email": "string",
+      "age": "number",
+      "avatar": "string",
+      "password": "string",
+      "birthdate": "date",
+      "registeredAt": "date"
    }
    ```
 
