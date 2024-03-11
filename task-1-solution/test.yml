@@ -1,0 +1,17 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 24 # Test duration in seconds
+      arrivalRate: 100 # Start with 100 users per second
+      rampTo: 1000 # Increase to 1000 users per second
+scenarios:
+  - name: "Without DB Operations"
+    weight: 5 # 5 times more than POSTs
+    flow:
+      - get:
+          url: "/"
+  - name: "With DB Operations"
+    weight: 1
+    flow:
+      - post:
+          url: "/"

@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    title App
+  body
+    block content
+      h1 Data
+      each entry in data
+        div
+          p=entry.username
+          p=entry.email
+          p=entry.avatar
+          p=entry.password
+          p=entry.birthdate
+          p=entry.registeredAt
