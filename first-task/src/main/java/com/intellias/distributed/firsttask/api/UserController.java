@@ -8,11 +8,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.UUID;
 
 @Controller
@@ -40,14 +42,14 @@ public class UserController {
     }
 
     @PostMapping(value = "create")
-    public UserDto createUser(@RequestBody UserDto request) {
+    public String createUser(@RequestBody UserDto request, Model model) {
         log.info("Creating new user from create request at {}", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         User document = userMapper.toDocument(request);
         document.setId(UUID.randomUUID().toString());
 
         User saved = userRepository.save(document);
-
-        return userMapper.toDto(saved);
+        model.addAttribute("users", Collections.singletonList(userMapper.toDto(saved)));
+        return "user";
     }
 }
