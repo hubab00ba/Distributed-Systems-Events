@@ -1,0 +1,21 @@
+config:
+  target: 'http://localhost:3000'
+  phases:
+    - duration: 1
+      arrivalRate: 10
+      rampTo: 100
+  processor: "./test-processors.js"
+
+scenarios:
+  - name: "Compare the responses from the 2 services"
+    flow:
+      - post:
+          url: "/"
+          json: { }
+          capture:
+            json: "$._id"
+            as: "_id"
+          afterResponse: "processResponse"
+      - get:
+          url: "http://localhost:3001?_id={{ _id }}"
+          afterResponse: "compareResponse"
