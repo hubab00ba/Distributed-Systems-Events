@@ -1,17 +1,26 @@
 config:
-  target: "http://localhost:3000"
+  target: "http://localhost:8080"
   phases:
     - duration: 24 # Test duration in seconds
       arrivalRate: 100 # Start with 100 users per second
-      rampTo: 1000 # Increase to 1000 users per second
+      rampTo: 2200 # Increase to 1000 users per second
 scenarios:
   - name: "Without DB Operations"
-    weight: 5 # 5 times more than POSTs
+    weight: 1 # 5 times more than POSTs
     flow:
       - get:
-          url: "/"
+          url: "/user/sample"
   - name: "With DB Operations"
     weight: 1
     flow:
       - post:
-          url: "/"
+          url: "/user/create"
+          json:
+            username: "Carl"
+            email: "carl@email.com"
+            age: 31
+            avatar: "<empty-hash>"
+            password: "8cb2237d0679ca88db6464eac60da96345513964"
+            birthdate: "1993-12-12"
+          headers:
+            Content-Type: "application/json"
