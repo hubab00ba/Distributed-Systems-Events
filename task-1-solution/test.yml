@@ -1,9 +1,21 @@
 config:
   target: "http://localhost:3000"
   phases:
-    - duration: 24 # Test duration in seconds
-      arrivalRate: 100 # Start with 100 users per second
-      rampTo: 1000 # Increase to 1000 users per second
+    - duration: 30 # Test duration in seconds
+      arrivalRate: 10 # Start with 10 users per second
+      rampTo: 100 # Increase to 100 users per second
+      name: Warm up phase
+
+    - duration: 30
+      arrivalRate: 100
+      rampTo: 1000
+      name: Ramp up load
+
+    - duration: 30
+      arrivalRate: 100
+      rampTo: 2000
+      name: Spike phase
+
 scenarios:
   - name: "Without DB Operations"
     weight: 5 # 5 times more than POSTs
