@@ -2,10 +2,12 @@ package com.intellias.distributed.secondtask.api;
 
 import com.intellias.distributed.secondtask.api.dto.UserDto;
 import com.intellias.distributed.secondtask.api.mapper.UserMapper;
+import com.intellias.distributed.secondtask.config.RabbitConfig;
 import com.intellias.distributed.secondtask.model.User;
 import com.intellias.distributed.secondtask.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,7 @@ public class UsersController {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final RabbitTemplate rabbitTemplate;
 
     @PostMapping("create")
     public UserDto createUser(@RequestBody UserDto request) {
@@ -28,8 +31,10 @@ public class UsersController {
         User document = userMapper.toDocument(request);
 
         User saved = userRepository.save(document);
+        UserDto newUserDto = userMapper.toDto(saved);
+        rabbitTemplate.convertAndSend(RabbitConfig.QUEUE, newUserDto);
 
-        return userMapper.toDto(saved);
+        return newUserDto;
     }
 
     @GetMapping("{id}")
