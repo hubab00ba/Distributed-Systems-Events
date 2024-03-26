@@ -8,12 +8,13 @@ import com.intellias.distributed.secondtask.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("users")
@@ -35,18 +36,5 @@ public class UsersController {
         rabbitTemplate.convertAndSend(RabbitConfig.QUEUE, newUserDto);
 
         return newUserDto;
-    }
-
-    @GetMapping("{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable("id") String id) {
-        log.info("Fetching user with id: {}, at: {}", id, LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-        Optional<User> user = userRepository.findById(id);
-
-        return user.map(userMapper::toDto)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> {
-                    log.warn("User with id: {} not found at: {}", id, LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-                    return ResponseEntity.notFound().build();
-                });
     }
 }
