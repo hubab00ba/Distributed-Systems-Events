@@ -1,35 +1,29 @@
-const mongoose = require("mongoose");
 const express = require("express");
-const Data = require("./data");
 const amqplib = require("amqplib");
+const NodeCache = require("node-cache");
 
 (async () => {
-  await mongoose
-    .connect("mongodb://localhost/task-2-read")
-    .then(() => console.log("Connected to MongoDB..."))
-    .catch((err) => console.error("Could not connect to MongoDB...", err));
-
   const conn = await amqplib.connect("amqp://localhost");
-
   const channel = await conn.createChannel();
   await channel.assertQueue("data-queue");
+
+  const cache = new NodeCache({ stdTTL: 0 });
+
+  const app = express();
 
   await channel.consume(
     "data-queue",
     async (msg) => {
       if (msg !== null) {
         const data = JSON.parse(msg.content.toString());
-        await Data.create(data);
+        cache.set(data._id, data);
       }
     },
     { noAck: true },
   );
 
-  const app = express();
-
   app.get("/", async (req, res) => {
-    const data = await Data.findOne({ _id: req.query._id });
-
+    const data = cache.get(req.query._id);
     return res.send(data);
   });
 

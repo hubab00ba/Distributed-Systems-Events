@@ -1,0 +1,2 @@
+I pick in memory cache for this test and surprisingly it gives very quick inconsistency when I bump duration to 2 seconds between 40 and 50 requests.
+I think result should be about the same with 2 databases, in my opinion data serialization and deserialization take enough time to create big risk of inconsistency
