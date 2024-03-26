@@ -1,0 +1,21 @@
+config:
+  target: http://localhost:8080
+  phases:
+    - duration: 20
+      arrivalRate: 40
+    - duration: 180
+      arrivalRate: 80
+scenarios:
+  - flow:
+      - get:
+            url: "/user/get"
+      - post:
+          url: "/user/create"
+          json:
+            username: "new-user"
+            email: "email@example.com"
+            age: 27
+            avatar: "avatar123"
+            password: "pwd123"
+            birthdate: "1984-12-24"
+            registeredAt: "2024-03-18T15:14:28.896237"

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h3>User</h3>
+<table style="width:80%" border="1"
+       class="table table-striped table-responsive-md">
+    <thead>
+    <tr>
+        <th>username</th>
+        <th>age</th>
+        <th>email</th>
+        <th>avatar</th>
+        <th>password</th>
+        <th>birthdate</th>
+        <th>registeredAt</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user: ${users}">
+        <td th:text="${user.username}"/>
+        <td th:text="${user.age}"/>
+        <td th:text="${user.email}"/>
+        <td th:text="${user.avatar}"/>
+        <td th:text="${user.password}"/>
+        <td th:text="${user.birthdate}"/>
+        <td th:text="${user.registeredAt}"/>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
