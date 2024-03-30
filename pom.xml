@@ -57,6 +57,7 @@
 
 	<modules>
 		<module>skravchuk-task-1</module>
+		<module>skravchuk-task-2</module>
 	</modules>
 
 </project>

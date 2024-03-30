@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: Read-Service Data Inconsistency
+  rabbitmq:
+    port: 5672
+  data:
+    mongodb:
+#      TODO: add separate database
+      host: localhost
+      port: 27017
+      database: services_inconsistency
+
+server:
+  port: 8081
+
+logging:
+  pattern.console: "%d{HH:mm:ss.SSS} [%12.12t] %clr(${LOG_LEVEL_PATTERN:%5p}) %.20logger{20} - %msg%n"
+  level:
+    org.hibernate.SQL: DEBUG
+    org.springframework.amqp.rabbit: DEBUG
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG

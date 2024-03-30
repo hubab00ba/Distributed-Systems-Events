@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: Write-Service Data Inconsistency
+  rabbitmq:
+    port: 5672
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: services_inconsistency
+
+server:
+  port: 8080
+
+logging:
+  pattern.console: "%d{HH:mm:ss.SSS} [%12.12t] %clr(${LOG_LEVEL_PATTERN:%5p}) %.20logger{20} - %msg%n"
+  level:
+    org.springframework.amqp.rabbit: DEBUG
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
