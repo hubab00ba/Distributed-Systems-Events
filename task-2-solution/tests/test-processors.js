@@ -5,7 +5,7 @@ module.exports = {
     try {
       const responseBody = JSON.parse(response.body);
 
-      context.vars._id = responseBody._id;
+      context.vars._id = responseBody.id;
 
       return next();
     } catch (error) {
@@ -15,9 +15,10 @@ module.exports = {
   },
   compareResponse: function (requestParams, response, context, ee, next) {
     try {
-      if (!response.body) {
+      const responseBody = JSON.parse(response.body);
+      if (!responseBody.data) {
         console.warn(
-          `Inconsistency detected! Made request for ${context.vars._id} and received "${response.body}"`,
+          `Inconsistency detected! Made request for ${context.vars._id} and received "${responseBody.message}"`,
         );
       }
 

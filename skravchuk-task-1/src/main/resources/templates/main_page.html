@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Page</title>
+</head>
+<body>
+<h1>Data:</h1>
+
+<tr th:each="user: ${userData}">
+    <!--/*@thymesVar id="user" type="com.example.stresstest.model.User"*/-->
+    <td th:text="${user.getId()}"></td>
+    <br>
+    <td th:text="${user.getUsername()}"></td>
+    <br>
+    <td th:text="${user.getEmail()}"></td>
+    <br>
+    <td th:text="${user.getAvatar()}"></td>
+    <br>
+    <td th:text="${user.getBirthdate()}"></td>
+    <br>
+    <td th:text="${user.getRegisteredAt()}"></td>
+    <br>
+    <br>
+</tr>
+</body>
+</html>
