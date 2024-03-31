@@ -1,0 +1,44 @@
+execution:
+#  Catching inconsistency in inter-service communication
+  - concurrency: 150
+    ramp-up: 1s
+    iterations: 1
+    scenario: catching-inconsistency
+
+scenarios:
+  catching-inconsistency:
+    think-time: 50ms # delay before each request
+    requests:
+      - url: http://localhost:8080/user/create
+        method: POST
+        headers:
+          Content-Type: application/json
+        body: '{
+  "username": "Carl",
+  "email": "carl@email.com",
+  "age": "31",
+  "avatar": "<empty-hash>",
+  "password": "8cb2237d0679ca88db6464eac60da96345513964",
+  "birthdate": "1993-12-12"
+}'
+        extract-jsonpath:
+          username: $.username
+          user-id: $.id
+      - url: http://localhost:8081/user-data/${user-id}
+        method: GET
+        assert-jsonpath:
+          - jsonpath: "$.data.id"
+            validate: true
+            expected-value: ${user-id}
+            regex: false
+            expect-null: false
+
+
+modules:
+  jmeter:
+    path: C:\Users\skravchuk\utils\tools\apache-jmeter-5.6.3\bin\jmeter.bat
+  console:
+    disable: true
+
+#reporting:
+#  - blazemeter

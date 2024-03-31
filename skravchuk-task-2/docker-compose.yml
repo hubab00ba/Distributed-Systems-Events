@@ -1,14 +1,31 @@
 version: '3.8'
 
 services:
-  mongo:
+  write-service-mongo:
     image: mongo
-    hostname: mongo
+    container_name: write-service-mongo
     ports:
       - "27017:27017"
+    networks:
+      - write-service-net
+
+  read-service-mongo:
+    image: mongo
+    container_name: read-service-mongo
+    ports:
+      - "27018:27017"
+    networks:
+      - read-service-net
 
   rabbit:
     image: rabbitmq:3-management #has the management plugin preinstalled
     ports:
       - "5672:5672" #main port
       - "15672:15672" #admin port see http://localhost:15672/#/
+    networks:
+      - rabbit-net
+
+networks:
+  rabbit-net:
+  write-service-net:
+  read-service-net:

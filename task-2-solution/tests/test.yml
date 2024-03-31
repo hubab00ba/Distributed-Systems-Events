@@ -1,21 +1,29 @@
 config:
-  target: 'http://localhost:3000'
+  target: 'http://localhost:8080'
   phases:
     - duration: 1
       arrivalRate: 10
-      rampTo: 100
+      rampTo: 300
   processor: "./test-processors.js"
 
 scenarios:
   - name: "Compare the responses from the 2 services"
     flow:
       - post:
-          url: "/"
-          json: { }
+          url: "/user/create"
+          json:
+            username: "Carl"
+            email: "carl@email.com"
+            age: 31
+            avatar: "<empty-hash>"
+            password: "8cb2237d0679ca88db6464eac60da96345513964"
+            birthdate: "1993-12-12"
+          headers:
+            Content-Type: "application/json"
           capture:
-            json: "$._id"
-            as: "_id"
+            json: "$.id"
+            as: "id"
           afterResponse: "processResponse"
       - get:
-          url: "http://localhost:3001?_id={{ _id }}"
+          url: "http://localhost:8081/user-data/{{ id }}"
           afterResponse: "compareResponse"
