@@ -1,0 +1,117 @@
+version: "3.7"
+
+services:
+
+  # Items service
+  items-service:
+    build:
+      context: item-service
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - redpanda
+    restart: always
+    networks:
+      net:
+    environment:
+      - "JDBC_URL=jdbc:postgresql://postgres:5432/saga"
+      - "DB_USERNAME=user"
+      - "DB_PASSWORD=password"
+      - "KAFKA_BOOTSTRAP_SERVERS=redpanda:29092"
+
+  # Users service
+  users-service:
+    build:
+      context: user-service
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - redpanda
+    restart: always
+    networks:
+      net:
+    environment:
+      - "JDBC_URL=jdbc:postgresql://postgres:5432/saga"
+      - "DB_USERNAME=user"
+      - "DB_PASSWORD=password"
+      - "KAFKA_BOOTSTRAP_SERVERS=redpanda:29092"
+
+  # Orders service
+  orders-service:
+    build:
+      context: orders-service
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+      - redpanda
+    restart: always
+    ports:
+      - "8000:8000"
+    networks:
+      net:
+    environment:
+      - "JDBC_URL=jdbc:postgresql://postgres:5432/saga"
+      - "DB_USERNAME=user"
+      - "DB_PASSWORD=password"
+      - "KAFKA_BOOTSTRAP_SERVERS=redpanda:29092"
+
+  # Postgres database
+  postgres:
+    image: postgres:9.4
+    ports:
+      - "5432:5432"
+    networks:
+      net:
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_DB: saga
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+
+  # Red panda
+  redpanda:
+    image: vectorized/redpanda:v23.2.17
+    networks:
+      net:
+    command:
+      - redpanda start
+      - --smp 1
+      - --overprovisioned
+      - --node-id 0
+      - --kafka-addr PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr PLAINTEXT://redpanda:29092,OUTSIDE://localhost:9092
+      - --pandaproxy-addr 0.0.0.0:8082
+      - --advertise-pandaproxy-addr localhost:8082
+    ports:
+      - "8081:8081"
+      - "8082:8082"
+      - "9092:9092"
+      - "29092:29092"
+
+  # Red Panda Console
+  red_panda_console:
+    image: docker.redpanda.com/redpandadata/console:v2.4.5
+    networks:
+      net:
+    entrypoint: /bin/sh
+    command: -c 'echo "$$CONSOLE_CONFIG_FILE" > /tmp/config.yml; /app/console'
+    environment:
+      CONFIG_FILEPATH: /tmp/config.yml
+      CONSOLE_CONFIG_FILE: |
+        kafka:
+          brokers: ["redpanda:29092"]
+          schemaRegistry:
+            enabled: true
+            urls: ["http://redpanda:8081"]
+        redpanda:
+          adminApi:
+            enabled: true
+            urls: ["http://redpanda:9644"]
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redpanda
+
+networks:
+  net:
