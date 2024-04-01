@@ -22,6 +22,6 @@ public class UserBalanceDAOImpl implements UserBalanceDAO {
 
 	@Override
 	public void updateUserBalance(String userId, BigDecimal delta) {
-
+		jdbcTemplate.update("UPDATE USERS SET BALANCE = BALANCE + ? WHERE ID = ?", delta, userId);
 	}
 }

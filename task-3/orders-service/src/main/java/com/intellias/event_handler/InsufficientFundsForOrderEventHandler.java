@@ -34,7 +34,7 @@ public class InsufficientFundsForOrderEventHandler implements EventHandler<Insuf
 		eventPublisher.publishEvent(
 				itemId,
 				new EventEnvelope(EventType.RELEASE_ITEM, new ReleaseItem(itemId, orderId)),
-				Channels.USER_SERVICE_REQUESTS_CHANNEL
+				Channels.ITEM_SERVICE_REQUESTS_CHANNEL
 		);
 	}
 }
