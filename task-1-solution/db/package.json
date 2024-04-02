@@ -1,0 +1,30 @@
+{
+  "name": "distributed-systems-assignment",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "run-01": "node ./01-load-testing",
+    "run-01-watch": "nodemon ./01-load-testing",
+    "test-01": "artillery run ./01-load-testing/load-test.yml"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmitrij-borchuk/Distributed-Systems-Assignment.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dmitrij-borchuk/Distributed-Systems-Assignment/issues"
+  },
+  "homepage": "https://github.com/dmitrij-borchuk/Distributed-Systems-Assignment#readme",
+  "dependencies": {
+    "artillery": "^2.0.7",
+    "fastify": "^4.26.2",
+    "nodemon": "^3.1.0",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.4.1"
+  }
+}
